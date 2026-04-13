@@ -30,7 +30,7 @@ const Products = () => {
 
   const toggleProductTag = async (id, field, currentValue) => {
     try {
-      await axios.put(`http://localhost:5000/api/products/${id}`, { [field]: !currentValue });
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/products/${id}`, { [field]: !currentValue });
       fetchProducts();
     } catch (err) {
       showToast('Lỗi cập nhật', 'error');
@@ -41,7 +41,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/products');
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/products');
       setProducts(res.data);
     } catch (error) {
       console.error("Error fetching products", error);
@@ -66,7 +66,7 @@ const Products = () => {
         const form = new FormData();
         form.append('image', imageFile);
         const token = localStorage.getItem('token');
-        const uploadRes = await axios.post('http://localhost:5000/api/upload', form, {
+        const uploadRes = await axios.post(import.meta.env.VITE_API_URL + '/api/upload', form, {
           headers: { Authorization: `Bearer ${token}` }
         });
         imageUrl = uploadRes.data.url;
@@ -82,10 +82,10 @@ const Products = () => {
       };
 
       if (isEditMode) {
-         await axios.put(`http://localhost:5000/api/products/${editId}`, payload);
+         await axios.put(`${import.meta.env.VITE_API_URL}/api/products/${editId}`, payload);
          showToast("Cập nhật món thành công!");
       } else {
-         await axios.post('http://localhost:5000/api/products', payload);
+         await axios.post(import.meta.env.VITE_API_URL + '/api/products', payload);
          showToast("Đã thêm món mới thành công!", "success");
       }
 
@@ -142,7 +142,7 @@ const Products = () => {
 
   const confirmDelete = async () => {
       try {
-        await axios.delete(`http://localhost:5000/api/products/${deleteConfirm.id}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${deleteConfirm.id}`);
         showToast("Đã xóa vĩnh viễn sản phẩm");
         setDeleteConfirm({ show: false, id: null });
         fetchProducts();

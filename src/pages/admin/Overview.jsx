@@ -32,7 +32,7 @@ const Overview = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:5000/api/dashboard/stats?timeframe=${timeframe}`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/dashboard/stats?timeframe=${timeframe}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStats(res.data.overview);

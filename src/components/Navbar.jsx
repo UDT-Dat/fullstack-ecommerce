@@ -45,7 +45,7 @@ const Navbar = () => {
   // Fetch products when search is opened
   useEffect(() => {
     if (isSearchOpen && products.length === 0) {
-      axios.get('http://localhost:5000/api/products')
+      axios.get(import.meta.env.VITE_API_URL + '/api/products')
         .then(res => setProducts(res.data))
         .catch(err => console.error(err));
     }
@@ -60,7 +60,7 @@ const Navbar = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:5000/api/users/membership', {
+    axios.get(import.meta.env.VITE_API_URL + '/api/users/membership', {
       headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
       if (res.data.tier && TIER_BADGE[res.data.tier]) {

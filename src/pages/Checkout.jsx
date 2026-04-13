@@ -19,11 +19,11 @@ const Checkout = () => {
   useEffect(() => {
      const token = localStorage.getItem('token');
      if (token) {
-         axios.get('http://localhost:5000/api/users/membership', {
+         axios.get(import.meta.env.VITE_API_URL + '/api/users/membership', {
              headers: { Authorization: `Bearer ${token}` }
          }).then(res => setMembership(res.data)).catch(err => console.error(err));
 
-         axios.get('http://localhost:5000/api/users/profile', {
+         axios.get(import.meta.env.VITE_API_URL + '/api/users/profile', {
              headers: { Authorization: `Bearer ${token}` }
          }).then(res => {
              const user = res.data;
@@ -70,7 +70,7 @@ const Checkout = () => {
   const handleApplyVoucher = async () => {
     if (!voucherCode.trim()) return;
     try {
-      const res = await axios.post('http://localhost:5000/api/discounts/validate', { code: voucherCode });
+      const res = await axios.post(import.meta.env.VITE_API_URL + '/api/discounts/validate', { code: voucherCode });
       setAppliedVoucher({ percentage: res.data.discountPercentage, code: res.data.code });
       showToast(res.data.message, "success");
     } catch (err) {
@@ -102,7 +102,7 @@ const Checkout = () => {
       };
 
       if (token) {
-         const res = await axios.post('http://localhost:5000/api/orders', payload, {
+         const res = await axios.post(import.meta.env.VITE_API_URL + '/api/orders', payload, {
            headers: { Authorization: `Bearer ${token}` }
          });
          clearCart();

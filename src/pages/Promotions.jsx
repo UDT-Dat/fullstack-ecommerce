@@ -21,7 +21,7 @@ const Promotions = () => {
   const fetchMembership = async () => {
       try {
           const token = localStorage.getItem('token');
-          const res = await axios.get('http://localhost:5000/api/users/membership', {
+          const res = await axios.get(import.meta.env.VITE_API_URL + '/api/users/membership', {
               headers: { Authorization: `Bearer ${token}` }
           });
           setMembership(res.data);
@@ -39,7 +39,7 @@ const Promotions = () => {
       setIsLoading(true);
       try {
           const token = localStorage.getItem('token');
-          const res = await axios.put('http://localhost:5000/api/users/join-membership', {}, {
+          const res = await axios.put(import.meta.env.VITE_API_URL + '/api/users/join-membership', {}, {
               headers: { Authorization: `Bearer ${token}` }
           });
           showToast(res.data.message, "success");

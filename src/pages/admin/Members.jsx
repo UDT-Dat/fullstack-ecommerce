@@ -19,7 +19,7 @@ const Members = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/users');
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/users');
       setUsers(res.data);
     } catch (err) { console.error(err); }
   };
@@ -29,7 +29,7 @@ const Members = () => {
 
   const handleToggleMembership = async (userId, current) => {
     try {
-      await axios.put(`http://localhost:5000/api/users/${userId}/membership`, { isMember: !current }, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${userId}/membership`, { isMember: !current }, {
         headers: { Authorization: `Bearer ${token()}` },
       });
       showToast(!current ? 'Đã cấp thẻ hội viên' : 'Đã thu hồi thẻ hội viên', 'success');
@@ -40,7 +40,7 @@ const Members = () => {
 
   const handleUpdateTier = async (userId, newTier) => {
     try {
-      await axios.put(`http://localhost:5000/api/users/${userId}/tier`, { tier: newTier }, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${userId}/tier`, { tier: newTier }, {
         headers: { Authorization: `Bearer ${token()}` },
       });
       showToast('Đã cập nhật hạng thành viên', 'success');

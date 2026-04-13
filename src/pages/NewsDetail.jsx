@@ -40,7 +40,7 @@ const NewsDetail = () => {
     const fetchPost = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:5000/api/posts/slug/${slug}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/slug/${slug}`);
         setPost(res.data.post);
         setRecentPosts(res.data.recentPosts);
         window.scrollTo(0, 0);

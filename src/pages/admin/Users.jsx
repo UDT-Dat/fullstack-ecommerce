@@ -31,7 +31,7 @@ const Users = () => {
   // ── fetch ──────────────────────────────────────────────────────────────────
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/users');
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/users');
       setUsers(res.data);
     } catch (err) { console.error(err); }
   };
@@ -68,12 +68,12 @@ const Users = () => {
         // Update via profile endpoint used by admin
         const payload = { ...formData };
         if (!payload.password) delete payload.password;
-        await axios.put(`http://localhost:5000/api/users/${editUserId}/profile`, payload, {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${editUserId}/profile`, payload, {
           headers: { Authorization: `Bearer ${token()}` },
         });
         showToast('Đã cập nhật thông tin người dùng', 'success');
       } else {
-        await axios.post('http://localhost:5000/api/auth/register', formData);
+        await axios.post(import.meta.env.VITE_API_URL + '/api/auth/register', formData);
         showToast('Đã tạo người dùng mới thành công', 'success');
       }
       setIsModalOpen(false);
@@ -86,7 +86,7 @@ const Users = () => {
   const confirmDelete = async () => {
     if (!deleteConfirm.id) return;
     try {
-      await axios.delete(`http://localhost:5000/api/users/${deleteConfirm.id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${deleteConfirm.id}`, {
         headers: { Authorization: `Bearer ${token()}` },
       });
       showToast('Đã xóa người dùng', 'success');
@@ -97,7 +97,7 @@ const Users = () => {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
-      await axios.put(`http://localhost:5000/api/users/${userId}/role`, { role: newRole }, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${userId}/role`, { role: newRole }, {
         headers: { Authorization: `Bearer ${token()}` },
       });
       showToast('Đã cập nhật quyền hạn', 'success');

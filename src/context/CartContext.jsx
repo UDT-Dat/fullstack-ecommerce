@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
                     size: item.size || '',
                     selectedOptions: item.selectedOptions || {},
                 }));
-                await axios.put('http://localhost:5000/api/cart', { items: payload }, {
+                await axios.put(import.meta.env.VITE_API_URL + '/api/cart', { items: payload }, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
             } catch (_) { /* silent fail — localStorage is the source of truth */ }
@@ -43,7 +43,7 @@ export const CartProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         if (!token) return;
         try {
-            const res = await axios.get('http://localhost:5000/api/cart', {
+            const res = await axios.get(import.meta.env.VITE_API_URL + '/api/cart', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const serverItems = res.data;
@@ -129,7 +129,7 @@ export const CartProvider = ({ children }) => {
         setCartItems([]);
         const token = localStorage.getItem('token');
         if (token) {
-            axios.delete('http://localhost:5000/api/cart', { headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
+            axios.delete(import.meta.env.VITE_API_URL + '/api/cart', { headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
         }
     };
 

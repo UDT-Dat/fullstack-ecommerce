@@ -13,7 +13,7 @@ const BrandValues = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/posts');
+        const res = await axios.get(import.meta.env.VITE_API_URL + '/api/posts');
         setPosts(res.data);
       } catch (err) {
         console.error(err);

@@ -12,7 +12,7 @@ const Settings = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/auth');
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/auth');
       setUsers(res.data);
     } catch(err) {
       console.error(err);
@@ -23,7 +23,7 @@ const Settings = () => {
 
   const handleCreate = async () => {
      try {
-       await axios.post('http://localhost:5000/api/auth/register', formData);
+       await axios.post(import.meta.env.VITE_API_URL + '/api/auth/register', formData);
        setIsModalOpen(false);
        setFormData({ name: 'Admin', username: '', password: '', role: 'admin' });
        fetchUsers();
@@ -37,7 +37,7 @@ const Settings = () => {
   const confirmDelete = async () => {
      if(deleteConfirm.id) {
         try {
-           await axios.delete(`http://localhost:5000/api/auth/${deleteConfirm.id}`);
+           await axios.delete(`${import.meta.env.VITE_API_URL}/api/auth/${deleteConfirm.id}`);
            fetchUsers();
            showToast("Đã khóa quyền quản trị của tài khoản này", "success");
         } catch(err) { 

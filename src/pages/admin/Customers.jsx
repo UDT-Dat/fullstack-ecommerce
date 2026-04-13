@@ -12,7 +12,7 @@ const Customers = () => {
 
   const fetchUsers = async () => {
       try {
-          const res = await axios.get('http://localhost:5000/api/auth');
+          const res = await axios.get(import.meta.env.VITE_API_URL + '/api/auth');
           setUsers(res.data);
       } catch (err) {
           console.error(err);
@@ -23,7 +23,7 @@ const Customers = () => {
 
   const handleCreate = async () => {
       try {
-          await axios.post('http://localhost:5000/api/auth/register', formData);
+          await axios.post(import.meta.env.VITE_API_URL + '/api/auth/register', formData);
           setIsModalOpen(false);
           setFormData({ name: '', username: '', phone: '', email: '', password: 'password123' });
           fetchUsers();
@@ -37,7 +37,7 @@ const Customers = () => {
   const confirmDelete = async () => {
       if(deleteConfirm.id) {
           try {
-              await axios.delete(`http://localhost:5000/api/auth/${deleteConfirm.id}`);
+              await axios.delete(`${import.meta.env.VITE_API_URL}/api/auth/${deleteConfirm.id}`);
               fetchUsers();
               showToast("Đã xóa vĩnh viễn khách hàng này", "success");
           } catch(err) { 

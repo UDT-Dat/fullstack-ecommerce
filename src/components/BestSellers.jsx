@@ -7,7 +7,7 @@ const BestSellers = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/products")
+      .get(import.meta.env.VITE_API_URL + "/api/products")
       .then((res) => {
         const bestSellers = res.data.filter((p) => p.isBestSeller);
         const display = bestSellers.length >= 5 ? bestSellers : res.data;

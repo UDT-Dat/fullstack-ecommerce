@@ -65,7 +65,7 @@ const Menu = () => {
 
     if (token) {
       axios
-        .get("http://localhost:5000/api/users/membership", {
+        .get(import.meta.env.VITE_API_URL + "/api/users/membership", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setIsMember(res.data.isMember))
@@ -76,7 +76,7 @@ const Menu = () => {
 
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get(import.meta.env.VITE_API_URL + "/api/products");
         setProducts(response.data);
       } catch (err) {
         console.error("Error fetching products:", err);

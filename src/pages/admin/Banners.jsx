@@ -18,7 +18,7 @@ const Banners = () => {
 
   const fetchBanners = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/banners/admin', { headers });
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/banners/admin', { headers });
       setBanners(res.data);
     } catch (err) {
       showToast('Lỗi tải banner', 'error');
@@ -39,7 +39,7 @@ const Banners = () => {
     if (!imageFile) return null;
     const form = new FormData();
     form.append('image', imageFile);
-    const res = await axios.post('http://localhost:5000/api/upload', form, { headers });
+    const res = await axios.post(import.meta.env.VITE_API_URL + '/api/upload', form, { headers });
     return res.data.url;
   };
 
@@ -58,10 +58,10 @@ const Banners = () => {
       const payload = { ...formData, image: imageUrl, order: Number(formData.order) };
 
       if (isEditMode) {
-        await axios.put(`http://localhost:5000/api/banners/${editId}`, payload, { headers });
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/banners/${editId}`, payload, { headers });
         showToast('Cập nhật banner thành công!');
       } else {
-        await axios.post('http://localhost:5000/api/banners', payload, { headers });
+        await axios.post(import.meta.env.VITE_API_URL + '/api/banners', payload, { headers });
         showToast('Thêm banner mới thành công!', 'success');
       }
 
@@ -84,7 +84,7 @@ const Banners = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/banners/${deleteConfirm.id}`, { headers });
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/banners/${deleteConfirm.id}`, { headers });
       showToast('Đã xóa banner');
       setDeleteConfirm({ show: false, id: null });
       fetchBanners();
@@ -96,7 +96,7 @@ const Banners = () => {
 
   const toggleActive = async (id, current) => {
     try {
-      await axios.put(`http://localhost:5000/api/banners/${id}`, { isActive: !current }, { headers });
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/banners/${id}`, { isActive: !current }, { headers });
       fetchBanners();
     } catch (_) {}
   };

@@ -47,7 +47,7 @@ const Profile = () => {
     fetchProfileData(token);
     fetchMyOrders(token);
 
-    axios.get('http://localhost:5000/api/users/membership', {
+    axios.get(import.meta.env.VITE_API_URL + '/api/users/membership', {
       headers: { Authorization: `Bearer ${token}` }
     }).then(res => {
       setIsMember(res.data.isMember);
@@ -77,7 +77,7 @@ const Profile = () => {
 
   const fetchProfileData = async (token) => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users/profile", {
+      const res = await axios.get(import.meta.env.VITE_API_URL + "/api/users/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const fetchedInfo = res.data;
@@ -104,7 +104,7 @@ const Profile = () => {
 
   const fetchMyOrders = async (token) => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders/myorders", {
+      const res = await axios.get(import.meta.env.VITE_API_URL + "/api/orders/myorders", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyOrders(res.data);
@@ -117,7 +117,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.put("http://localhost:5000/api/users/profile", profileData, {
+      await axios.put(import.meta.env.VITE_API_URL + "/api/users/profile", profileData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       showToast("Đã cập nhật cấu hình tài khoản!", "success");
@@ -530,7 +530,7 @@ const Profile = () => {
                   }
                   try {
                     const token = localStorage.getItem('token');
-                    const res = await axios.post('http://localhost:5000/api/auth/change-password', {
+                    const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/change-password', {
                       currentPassword: passwordData.currentPassword,
                       newPassword: passwordData.newPassword
                     }, { headers: { Authorization: `Bearer ${token}` } });

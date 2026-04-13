@@ -12,7 +12,7 @@ const Vouchers = () => {
 
   const fetchDiscounts = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/discounts');
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/discounts');
       setDiscounts(res.data);
     } catch (err) {
       console.error(err);
@@ -23,7 +23,7 @@ const Vouchers = () => {
 
   const handleCreate = async () => {
     try {
-      await axios.post('http://localhost:5000/api/discounts', {
+      await axios.post(import.meta.env.VITE_API_URL + '/api/discounts', {
          code: formData.code,
          discountPercentage: Number(formData.discountPercentage),
          expiryDate: formData.expiryDate || new Date(new Date().setFullYear(new Date().getFullYear() + 1)) // default 1 year
@@ -41,7 +41,7 @@ const Vouchers = () => {
   const confirmDelete = async () => {
      if(deleteConfirm.id) {
          try {
-             await axios.delete(`http://localhost:5000/api/discounts/${deleteConfirm.id}`);
+             await axios.delete(`${import.meta.env.VITE_API_URL}/api/discounts/${deleteConfirm.id}`);
              fetchDiscounts();
              showToast("Đã xóa mã khuyên mãi", "success");
          } catch(err) { 

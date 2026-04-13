@@ -25,7 +25,7 @@ const Posts = () => {
   const fetchPosts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/posts/admin', {
+      const res = await axios.get(import.meta.env.VITE_API_URL + '/api/posts/admin', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPosts(res.data);
@@ -62,7 +62,7 @@ const Posts = () => {
     data.append('image', file);
     try {
         const token = localStorage.getItem('token');
-        const res = await axios.post('http://localhost:5000/api/upload', data, {
+        const res = await axios.post(import.meta.env.VITE_API_URL + '/api/upload', data, {
             headers: { 
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
@@ -88,10 +88,10 @@ const Posts = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       if (editMode) {
-        await axios.put(`http://localhost:5000/api/posts/${editPostId}`, payload, { headers });
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/posts/${editPostId}`, payload, { headers });
         showToast("Cập nhật bài viết thành công!", "success");
       } else {
-        await axios.post('http://localhost:5000/api/posts', payload, { headers });
+        await axios.post(import.meta.env.VITE_API_URL + '/api/posts', payload, { headers });
         showToast("Thêm bài viết thành công!", "success");
       }
       setIsModalOpen(false);
@@ -104,7 +104,7 @@ const Posts = () => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/posts/${deleteConfirm.id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/posts/${deleteConfirm.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       showToast("Đã xóa bài viết!", "success");

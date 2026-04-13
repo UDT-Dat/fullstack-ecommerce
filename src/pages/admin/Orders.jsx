@@ -14,7 +14,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
      try {
-       const res = await axios.get('http://localhost:5000/api/orders');
+       const res = await axios.get(import.meta.env.VITE_API_URL + '/api/orders');
        setOrders(res.data);
        return res.data;
      } catch (err) {
@@ -41,7 +41,7 @@ const Orders = () => {
     setSelectedOrder(order);
     if (order.isReadAdmin === false) {
       try {
-        await axios.put(`http://localhost:5000/api/orders/${order._id}/read`);
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/orders/${order._id}/read`);
         setOrders(prev => prev.map(o => o._id === order._id ? { ...o, isReadAdmin: true } : o));
       } catch (err) {
         console.error("Lỗi đánh dấu order", err);
@@ -51,7 +51,7 @@ const Orders = () => {
 
   const updateStatus = async (id, status) => {
      try {
-       await axios.put(`http://localhost:5000/api/orders/${id}/status`, { status });
+       await axios.put(`${import.meta.env.VITE_API_URL}/api/orders/${id}/status`, { status });
        fetchOrders();
        showToast(`Đã đổi trạng thái thành ${status}`, 'success');
      } catch (err) {

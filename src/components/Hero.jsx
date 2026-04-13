@@ -54,7 +54,7 @@ const Hero = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/banners')
+    axios.get(import.meta.env.VITE_API_URL + '/api/banners')
       .then(res => { setBanners(res.data); setLoaded(true); })
       .catch(() => setLoaded(true));
   }, []);

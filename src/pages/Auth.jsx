@@ -77,7 +77,7 @@ const Auth = () => {
         }
 
         const payload = { identifier: formData.identifier, password: formData.password, trustedToken };
-        const response = await axios.post(`http://localhost:5000/api/auth/login`, payload);
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, payload);
         
         if (rememberCredentials) {
           localStorage.setItem('citrus_rememberedAcc', JSON.stringify({ identifier: formData.identifier, password: formData.password }));
@@ -98,7 +98,7 @@ const Auth = () => {
         }
       } else {
         if (!formData.email) return showToast("Vui lòng nhập Email để nhận mã xác minh.", "error");
-        await axios.post(`http://localhost:5000/api/auth/send-otp`, { email: formData.email });
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/send-otp`, { email: formData.email });
         setTempEmail(formData.email);
         setShowOtpModal(true);
         showToast("Mã OTP đã được gửi đến email đăng ký", "success");
@@ -113,7 +113,7 @@ const Auth = () => {
      if (otpCode.length < 6) return showToast("Vui lòng nhập đủ 6 số OTP", "error");
      try {
         if (isLogin) {
-           const res = await axios.post('http://localhost:5000/api/auth/verify-login', { email: tempEmail, otp: otpCode, rememberMe: rememberDevice });
+           const res = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/verify-login', { email: tempEmail, otp: otpCode, rememberMe: rememberDevice });
            localStorage.setItem('token', res.data.token);
            localStorage.setItem('user', JSON.stringify(res.data.user));
             if (rememberDevice) {
@@ -130,7 +130,7 @@ const Auth = () => {
            await loadCartFromServer();
            navigate('/');
         } else {
-           await axios.post('http://localhost:5000/api/auth/register', { ...formData, otp: otpCode });
+           await axios.post(import.meta.env.VITE_API_URL + '/api/auth/register', { ...formData, otp: otpCode });
            showToast("Đăng ký thành công! Vui lòng đăng nhập.", "success");
            setShowOtpModal(false);
            setIsLogin(true);
@@ -145,7 +145,7 @@ const Auth = () => {
   const handleForgotSendOtp = async () => {
     if (!forgotEmail) return showToast("Vui lòng nhập email.", "error");
     try {
-      await axios.post('http://localhost:5000/api/auth/forgot-password', { email: forgotEmail });
+      await axios.post(import.meta.env.VITE_API_URL + '/api/auth/forgot-password', { email: forgotEmail });
       showToast("Mã OTP đã được gửi đến email của bạn.", "success");
       setForgotStep('otp');
     } catch (err) {
@@ -165,7 +165,7 @@ const Auth = () => {
     if (newPassword.length < 6) return showToast("Mật khẩu mới phải có ít nhất 6 ký tự.", "error");
     try {
       const otpCode = forgotOtp.join('');
-      await axios.post('http://localhost:5000/api/auth/reset-password', { email: forgotEmail, otp: otpCode, newPassword });
+      await axios.post(import.meta.env.VITE_API_URL + '/api/auth/reset-password', { email: forgotEmail, otp: otpCode, newPassword });
       showToast("Đặt lại mật khẩu thành công! Vui lòng đăng nhập.", "success");
       setForgotStep(null);
       setForgotEmail('');
