@@ -5,8 +5,9 @@ const dns = require('dns');
 // Phá giải hoàn toàn lỗi ENETUNREACH 2404:6800... của IPv6
 dns.setDefaultResultOrder('ipv4first');
 
+// Sử dụng trực tiếp địa chỉ IPv4 tĩnh của máy chủ Google (bỏ qua DNS)
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: '142.250.141.108', // IP cứng của smtp.gmail.com
     port: 465,
     secure: true,
     auth: {
@@ -14,10 +15,9 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS  
     },
     tls: {
+        servername: 'smtp.gmail.com', // Cần thiết để Google cấp chứng chỉ SSL
         rejectUnauthorized: false
-    },
-    // Fix lỗi IPv6 (ENETUNREACH) trên Render
-    family: 4
+    }
 });
 
 const SENDER_NAME = '"Vitality Coffee" <' + (process.env.EMAIL_USER || 'no-reply@vitality.com') + '>';

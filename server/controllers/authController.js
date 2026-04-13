@@ -36,7 +36,7 @@ exports.sendOtp = async (req, res) => {
         await Otp.findOneAndUpdate(
             { email },
             { otp: otpCode, createdAt: Date.now() },
-            { upsert: true, new: true }
+            { upsert: true, returnDocument: 'after' }
         );
 
         await emailService.sendOTPVerificationEmail(email, otpCode);
@@ -120,7 +120,7 @@ exports.login = async (req, res) => {
         await Otp.findOneAndUpdate(
             { email: user.email },
             { otp: otpCode, createdAt: Date.now() },
-            { upsert: true, new: true }
+            { upsert: true, returnDocument: 'after' }
         );
 
         await emailService.sendOTPVerificationEmail(user.email, otpCode);
@@ -165,7 +165,7 @@ exports.forgotPassword = async (req, res) => {
         await Otp.findOneAndUpdate(
             { email },
             { otp: otpCode, createdAt: Date.now() },
-            { upsert: true, new: true }
+            { upsert: true, returnDocument: 'after' }
         );
 
         await emailService.sendOTPVerificationEmail(email, otpCode);
