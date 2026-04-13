@@ -1,76 +1,62 @@
-const nodemailer = require('nodemailer');
-const dns = require('dns');
+const Brevo = require('@getbrevo/brevo');
 
-// Cứu cánh cho Render: Ép Node.js phải dùng IPv4 khi nối mạng
-// Phá giải hoàn toàn lỗi ENETUNREACH 2404:6800... của IPv6
-dns.setDefaultResultOrder('ipv4first');
+// Khởi tạo Brevo API client (giao tiếp HTTPS - không bị Render chặn)
+const apiInstance = new Brevo.TransactionalEmailsApi();
+const apiKey = apiInstance.authentications['apiKey'];
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
-// Sử dụng trực tiếp địa chỉ IPv4 tĩnh của máy chủ Google (bỏ qua DNS)
-const transporter = nodemailer.createTransport({
-    host: '142.250.141.108', // IP cứng của smtp.gmail.com
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS  
-    },
-    tls: {
-        servername: 'smtp.gmail.com', // Cần thiết để Google cấp chứng chỉ SSL
-        rejectUnauthorized: false
-    }
-});
-
-const SENDER_NAME = '"Vitality Coffee" <' + (process.env.EMAIL_USER || 'no-reply@vitality.com') + '>';
+const SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || 'ungdat8@gmail.com';
+const SENDER_NAME = 'Vitality Coffee';
 
 const sendOTPVerificationEmail = async (email, otp) => {
     try {
-        const mailOptions = {
-            from: SENDER_NAME,
-            to: email,
-            subject: 'Xác minh tài khoản - Mã OTP của bạn',
-            html: `
-                <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 12px; max-width: 500px; margin: 0 auto; color: #1e293b;">
-                    <h2 style="color: #f59e0b; text-align: center;">Mã Xác Minh OTP</h2>
-                    <p style="font-size: 16px;">Xin chào,</p>
-                    <p style="font-size: 16px;">Bạn vừa yêu cầu mã OTP để đăng nhập/đăng ký tài khoản. Mã xác minh của bạn là:</p>
-                    <div style="background-color: #fff; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; border: 1px solid #e2e8f0;">
-                        <span style="font-size: 32px; font-weight: bold; letter-spacing: 12px; color: #0f172a;">${otp}</span>
-                    </div>
-                    <p style="font-size: 14px; color: #64748b;">Mã này sẽ hết hạn sau <strong>5 phút</strong>. Tuyệt đối không chia sẻ mã này với bất kỳ ai.</p>
+        const sendSmtpEmail = new Brevo.SendSmtpEmail();
+        sendSmtpEmail.to = [{ email }];
+        sendSmtpEmail.sender = { name: SENDER_NAME, email: SENDER_EMAIL };
+        sendSmtpEmail.subject = 'Xác minh tài khoản - Mã OTP của bạn';
+        sendSmtpEmail.htmlContent = `
+            <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 12px; max-width: 500px; margin: 0 auto; color: #1e293b;">
+                <h2 style="color: #f59e0b; text-align: center;">Mã Xác Minh OTP</h2>
+                <p style="font-size: 16px;">Xin chào,</p>
+                <p style="font-size: 16px;">Bạn vừa yêu cầu mã OTP để đăng nhập/đăng ký tài khoản. Mã xác minh của bạn là:</p>
+                <div style="background-color: #fff; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; border: 1px solid #e2e8f0;">
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 12px; color: #0f172a;">${otp}</span>
                 </div>
-            `,
-        };
-        const info = await transporter.sendMail(mailOptions);
-        return info;
+                <p style="font-size: 14px; color: #64748b;">Mã này sẽ hết hạn sau <strong>5 phút</strong>. Tuyệt đối không chia sẻ mã này với bất kỳ ai.</p>
+            </div>
+        `;
+
+        const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+        return result;
     } catch (error) {
-        console.error("Failed to send OTP email via Gmail:", error);
+        console.error("Failed to send OTP email via Brevo:", error?.response?.body || error.message);
         throw error;
     }
 };
 
 const sendOrderNotificationEmail = async (email, orderDetails) => {
     try {
-        const mailOptions = {
-            from: SENDER_NAME,
-            to: email,
-            subject: `Xác nhận đặt hàng thành công #${orderDetails._id.toString().slice(-6).toUpperCase()}`,
-            html: `
-                <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b;">
-                    <h2 style="color: #10b981;">Đặt hàng thành công!</h2>
-                    <p>Cảm ơn bạn đã tin tưởng. Đơn hàng của bạn đang được xử lý.</p>
-                    <ul>
-                        <li><strong>Mã đơn hàng:</strong> ${orderDetails._id}</li>
-                        <li><strong>Tổng tiền:</strong> ${orderDetails.totalPrice.toLocaleString()} đ</li>
-                        <li><strong>Địa chỉ giao:</strong> ${orderDetails.shippingAddress}</li>
-                    </ul>
-                    <p>Chúng tôi sẽ giao hàng nhanh nhất có thể!</p>
-                </div>
-            `,
-        };
-        const info = await transporter.sendMail(mailOptions);
-        return info;
+        const sendSmtpEmail = new Brevo.SendSmtpEmail();
+        sendSmtpEmail.to = [{ email }];
+        sendSmtpEmail.sender = { name: SENDER_NAME, email: SENDER_EMAIL };
+        sendSmtpEmail.subject = `Xác nhận đặt hàng thành công #${orderDetails._id.toString().slice(-6).toUpperCase()}`;
+        sendSmtpEmail.htmlContent = `
+            <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b;">
+                <h2 style="color: #10b981;">Đặt hàng thành công!</h2>
+                <p>Cảm ơn bạn đã tin tưởng. Đơn hàng của bạn đang được xử lý.</p>
+                <ul>
+                    <li><strong>Mã đơn hàng:</strong> ${orderDetails._id}</li>
+                    <li><strong>Tổng tiền:</strong> ${orderDetails.totalPrice.toLocaleString()} đ</li>
+                    <li><strong>Địa chỉ giao:</strong> ${orderDetails.shippingAddress}</li>
+                </ul>
+                <p>Chúng tôi sẽ giao hàng nhanh nhất có thể!</p>
+            </div>
+        `;
+
+        const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+        return result;
     } catch (error) {
-        console.error("Failed to send order email via Gmail:", error);
+        console.error("Failed to send order email via Brevo:", error?.response?.body || error.message);
         throw error;
     }
 };
@@ -79,3 +65,4 @@ module.exports = {
     sendOTPVerificationEmail,
     sendOrderNotificationEmail
 };
+
