@@ -1,13 +1,20 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const SENDER_EMAIL = process.env.SENDER_EMAIL || 'onboarding@resend.dev';
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER, // Địa chỉ Gmail của bạn
+        pass: process.env.EMAIL_PASS  // Mật khẩu Ứng dụng (App Password) của Gmail
+    }
+});
+
+const SENDER_NAME = '"Vitality Coffee" <' + (process.env.EMAIL_USER || 'no-reply@vitality.com') + '>';
 
 const sendOTPVerificationEmail = async (email, otp) => {
     try {
-        const data = await resend.emails.send({
-            from: `Vitality <${SENDER_EMAIL}>`,
-            to: [email],
+        const mailOptions = {
+            from: SENDER_NAME,
+            to: email,
             subject: 'Xác minh tài khoản - Mã OTP của bạn',
             html: `
                 <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 12px; max-width: 500px; margin: 0 auto; color: #1e293b;">
@@ -20,19 +27,20 @@ const sendOTPVerificationEmail = async (email, otp) => {
                     <p style="font-size: 14px; color: #64748b;">Mã này sẽ hết hạn sau <strong>5 phút</strong>. Tuyệt đối không chia sẻ mã này với bất kỳ ai.</p>
                 </div>
             `,
-        });
-        return data;
+        };
+        const info = await transporter.sendMail(mailOptions);
+        return info;
     } catch (error) {
-        console.error("Failed to send OTP email:", error);
+        console.error("Failed to send OTP email via Gmail:", error);
         throw error;
     }
 };
 
 const sendOrderNotificationEmail = async (email, orderDetails) => {
     try {
-        const data = await resend.emails.send({
-            from: `Vitality <${SENDER_EMAIL}>`,
-            to: [email],
+        const mailOptions = {
+            from: SENDER_NAME,
+            to: email,
             subject: `Xác nhận đặt hàng thành công #${orderDetails._id.toString().slice(-6).toUpperCase()}`,
             html: `
                 <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b;">
@@ -46,10 +54,11 @@ const sendOrderNotificationEmail = async (email, orderDetails) => {
                     <p>Chúng tôi sẽ giao hàng nhanh nhất có thể!</p>
                 </div>
             `,
-        });
-        return data;
+        };
+        const info = await transporter.sendMail(mailOptions);
+        return info;
     } catch (error) {
-        console.error("Failed to send order email:", error);
+        console.error("Failed to send order email via Gmail:", error);
         throw error;
     }
 };
