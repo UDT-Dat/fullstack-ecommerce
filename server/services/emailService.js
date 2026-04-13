@@ -1,4 +1,9 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
+
+// Cứu cánh cho Render: Ép Node.js phải dùng IPv4 khi nối mạng
+// Phá giải hoàn toàn lỗi ENETUNREACH 2404:6800... của IPv6
+dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
