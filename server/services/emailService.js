@@ -1,11 +1,18 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
-        user: process.env.EMAIL_USER, // Địa chỉ Gmail của bạn
-        pass: process.env.EMAIL_PASS  // Mật khẩu Ứng dụng (App Password) của Gmail
-    }
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS  
+    },
+    tls: {
+        rejectUnauthorized: false
+    },
+    // Fix lỗi IPv6 (ENETUNREACH) trên Render
+    family: 4
 });
 
 const SENDER_NAME = '"Vitality Coffee" <' + (process.env.EMAIL_USER || 'no-reply@vitality.com') + '>';
