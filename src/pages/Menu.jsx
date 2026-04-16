@@ -239,7 +239,7 @@ const Menu = () => {
                       className="block relative"
                     >
                       <div
-                        className={`relative aspect-[3/4] overflow-hidden mb-6 bg-zinc-50 rounded-xl border border-zinc-50 group-hover:border-amber-100 transition-colors ${outOfStock ? "grayscale opacity-50" : ""}`}
+                        className={`relative aspect-[10/11] overflow-hidden mb-6 bg-zinc-50 rounded-xl border border-zinc-50 group-hover:border-amber-100 transition-colors ${outOfStock ? "grayscale opacity-50" : ""}`}
                       >
                         <img
                           alt={product.title}
