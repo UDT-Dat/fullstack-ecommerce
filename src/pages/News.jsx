@@ -46,12 +46,12 @@ const News = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map(post => (
               <article key={post._id} className="group flex flex-col transition-all duration-300 hover:-translate-y-2">
-                <Link to={`/news/${post.slug}`} className="block relative overflow-hidden rounded-2xl shadow-md mb-5 bg-zinc-100">
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10"></div>
+                <Link to={`/news/${post.slug}`} className="block relative aspect-[16/9] overflow-hidden rounded-2xl shadow-md mb-5 bg-zinc-100">
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10 pointer-events-none"></div>
                   <img 
                     src={post.thumbnail} 
                     alt={post.title} 
-                    className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700"
                   />
                   {/* Views badge superimposed on image top right */}
                   <div className="absolute top-3 right-3 bg-white/90 backdrop-blur text-zinc-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest z-20 shadow flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
