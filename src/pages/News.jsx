@@ -51,7 +51,7 @@ const News = () => {
                   <img 
                     src={post.thumbnail} 
                     alt={post.title} 
-                    className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                   />
                   {/* Views badge superimposed on image top right */}
                   <div className="absolute top-3 right-3 bg-white/90 backdrop-blur text-zinc-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest z-20 shadow flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
