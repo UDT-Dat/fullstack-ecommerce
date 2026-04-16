@@ -38,12 +38,13 @@ const BestSellers = () => {
               key={product._id}
               className="group bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-amber-500/50 hover:shadow-[0_8px_30px_rgba(245,158,11,0.1)] transition-all duration-300"
             >
-              <div className="relative aspect-square overflow-hidden bg-zinc-800/50 p-4">
+              <div className="relative aspect-square overflow-hidden bg-zinc-900">
                 <img
                   alt={product.title}
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110 opacity-90 group-hover:opacity-100"
                   src={product.image}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent" />
                 <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 mt-1 ml-1">
                   {product.isBestSeller && (
                     <span className="bg-rose-500 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md shadow-sm w-max transition-colors hover:bg-rose-600 text-center">
