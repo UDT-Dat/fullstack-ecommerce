@@ -112,6 +112,17 @@ exports.login = async (req, res) => {
             }
         }
 
+        // Chỉ bỏ qua OTP cho duy nhất 1 tài khoản test dùng chung (cấu hình trong file .env hoặc hardcode tại đây)
+        const testAccountEmail = process.env.TEST_ACCOUNT_EMAIL || 'test@example.com';
+        if (user.email === testAccountEmail && user.role === 'admin') {
+            const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' });
+            return res.status(200).json({
+                requiresOtp: false,
+                token: token,
+                user: { id: user._id, name: user.name, role: user.role, email: user.email, phone: user.phone }
+            });
+        }
+
         if (!user.email) {
             return res.status(400).json({ message: "Tài khoản của bạn chưa cấu hình Email để nhận OTP. Vui lòng liên hệ Admin." });
         }
